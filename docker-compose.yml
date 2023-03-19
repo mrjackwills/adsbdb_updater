@@ -1,0 +1,32 @@
+version: "3.8"
+networks:
+  adsbdb-net:
+    name: adsbdb-net
+services:
+  adsbdb_updater:
+    image: adsbdb_updater:0.1.0
+    container_name: adsbdb_updater
+    hostname: adsbdb_updater
+    build:
+      context: $HOME/adsbdb_updater/
+      dockerfile: $HOME/adsbdb_updater/Dockerfile
+      args:
+        - DOCKER_UID=${DOCKER_UID}
+        - DOCKER_GUID=${DOCKER_GUID}
+        - DOCKER_TIME_CONT=${DOCKER_TIME_CONT}
+        - DOCKER_TIME_CITY=${DOCKER_TIME_CITY}
+    volumes:
+      - $HOME/adsbdb_updater/.env:/app_env/.env:ro
+      - $HOME/adsbdb_updater/input.txt:/app/input.txt:ro
+    cap_drop:
+      - all
+    security_opt:
+      - no-new-privileges
+    ipc: private
+    restart: always
+    networks:
+      - adsbdb-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "16m"

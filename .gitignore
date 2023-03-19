@@ -1,0 +1,5 @@
+/target
+
+# local env files
+**/.env*
+**/*.env*
